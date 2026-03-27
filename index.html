@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surgimate Analytics Hub Hackathon Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B0F1A;
+    --surface: #131829;
+    --surface-alt: #1A2035;
+    --border: #252D44;
+    --border-highlight: #3A4566;
+    --text: #E8EAF0;
+    --text-muted: #8892A8;
+    --accent-blue: #4A90D9;
+    --accent-teal: #2DD4BF;
+    --accent-orange: #F59E0B;
+    --accent-rose: #F43F5E;
+    --accent-violet: #8B5CF6;
+    --accent-emerald: #10B981;
+    --accent-sky: #38BDF8;
+    --accent-amber: #FBBF24;
+    --glow-blue: rgba(74, 144, 217, 0.15);
+    --glow-teal: rgba(45, 212, 191, 0.15);
+    --glow-orange: rgba(245, 158, 11, 0.15);
+    --glow-violet: rgba(139, 92, 246, 0.15);
+    --glow-rose: rgba(244, 63, 94, 0.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    background-image:
+      radial-gradient(ellipse 600px 400px at 15% 10%, rgba(74, 144, 217, 0.04), transparent),
+      radial-gradient(ellipse 500px 350px at 85% 60%, rgba(139, 92, 246, 0.04), transparent),
+      radial-gradient(ellipse 400px 300px at 50% 90%, rgba(45, 212, 191, 0.03), transparent);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  .page-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 48px 40px 80px;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    text-align: center;
+    margin-bottom: 64px;
+    position: relative;
+    padding-bottom: 32px;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+  }
+  .hero-label {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-teal);
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 44px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #E8EAF0, var(--accent-blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  .hero p {
+    color: var(--text-muted);
+    font-size: 15px;
+    max-width: 680px;
+    margin: 0 auto;
+    line-height: 1.65;
+  }
+
+  /* ── Section scaffolding ── */
+  .section {
+    margin-bottom: 56px;
+    position: relative;
+    z-index: 2;
+  }
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding: 6px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+  .section-label .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .section .section-subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 800px;
+    margin-bottom: 24px;
+  }
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+    margin: 56px 0;
+  }
+
+  /* ── Card / Panel ── */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    transition: border-color 0.2s;
+  }
+  .panel:hover { border-color: var(--border-highlight); }
+  .panel-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .panel ul {
+    list-style: none;
+    padding: 0;
+  }
+  .panel ul li {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.55;
+    padding: 4px 0;
+    padding-left: 16px;
+    position: relative;
+  }
+  .panel ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--bullet-color, var(--accent-blue));
+  }
+
+  /* ── Grid helpers ── */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 900px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  }
+
+  /* ── Pillar badges ── */
+  .pillars-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .pillar-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .pillar-badge:hover { border-color: var(--border-highlight); }
+
+  /* ── Scope stat row ── */
+  .stat-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .stat-card {
+    flex: 1;
+    min-width: 180px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    text-align: center;
+  }
+  .stat-card .stat-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-card .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  /* ── Architecture Canvas ── */
+  .arch-canvas { position: relative; width: 100%; }
+  .tier { position: relative; z-index: 2; margin-bottom: 20px; }
+  .tier-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 18px;
+    padding: 6px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+  .tier-label .dot { width: 6px; height: 6px; border-radius: 50%; }
+  .nodes-row {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .node-card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    min-width: 200px;
+    max-width: 280px;
+    flex: 1;
+    transition: all 0.3s ease;
+    cursor: default;
+  }
+  .node-card:hover { border-color: var(--border-highlight); transform: translateY(-2px); }
+  .node-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 13px;
+    padding: 1px;
+    background: linear-gradient(135deg, transparent 40%, var(--glow-color, var(--glow-blue)) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .node-card:hover::before { opacity: 1; }
+  .node-card.wide { max-width: 380px; min-width: 320px; }
+  .node-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700; margin-bottom: 14px;
+  }
+  .node-card .node-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .node-card .node-tech {
+    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+    font-weight: 600; margin-bottom: 10px;
+  }
+  .node-card .node-desc { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
+  .node-card .node-details { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .node-card .detail-item, .detail-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 12px; color: var(--text-muted); margin-bottom: 6px; line-height: 1.4;
+  }
+  .detail-item .bullet {
+    width: 4px; height: 4px; border-radius: 50%; margin-top: 5px; flex-shrink: 0;
+  }
+
+  /* ── Flow arrows ── */
+  .flow-section {
+    display: flex; justify-content: center; align-items: center;
+    padding: 12px 0; position: relative; z-index: 2;
+  }
+  .flow-arrow { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .flow-arrow .arrow-line { width: 2px; height: 32px; position: relative; overflow: visible; }
+  .flow-arrow .arrow-line::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 100%;
+    background: linear-gradient(to bottom, var(--arrow-color, var(--accent-blue)), transparent);
+    opacity: 0.6;
+  }
+  .flow-arrow .arrow-line::after {
+    content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 5px solid transparent; border-right: 5px solid transparent;
+    border-top: 6px solid var(--arrow-color, var(--accent-blue));
+    opacity: 0.6;
+  }
+  .flow-label {
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600;
+    padding: 4px 12px; border-radius: 4px; background: var(--surface-alt); border: 1px solid var(--border);
+  }
+  @keyframes flowDown {
+    0% { top: -8px; opacity: 0; } 30% { opacity: 1; } 70% { opacity: 1; }
+    100% { top: calc(100% + 8px); opacity: 0; }
+  }
+  .flow-arrow .arrow-line .particle {
+    position: absolute; width: 4px; height: 4px; border-radius: 50%;
+    left: -1px; animation: flowDown 2s ease-in-out infinite;
+  }
+
+  /* ── Embedding Section ── */
+  .embed-container {
+    position: relative; z-index: 2;
+    border: 2px solid var(--border); border-radius: 16px;
+    padding: 32px;
+    background: linear-gradient(135deg, var(--surface) 0%, rgba(26, 32, 53, 0.8) 100%);
+    margin-top: 8px;
+  }
+  .embed-container .embed-badge {
+    position: absolute; top: -12px; left: 32px;
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700;
+    color: var(--accent-teal); background: var(--bg); padding: 4px 14px;
+    border: 1px solid var(--accent-teal); border-radius: 4px;
+  }
+  .embed-inner { display: flex; gap: 24px; align-items: stretch; }
+  .embed-app {
+    flex: 1; border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px 24px; background: var(--surface-alt);
+  }
+  .embed-app .app-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+  }
+  .embed-app .app-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;
+  }
+  .embed-dashboards {
+    flex: 1.6; border: 1px dashed var(--border-highlight); border-radius: 10px;
+    padding: 20px 24px; background: rgba(74, 144, 217, 0.03);
+  }
+  .embed-dashboards .dash-header {
+    font-size: 13px; font-weight: 700; margin-bottom: 14px; color: var(--accent-sky);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .dash-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .dash-tile {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px; text-align: center; transition: all 0.2s;
+  }
+  .dash-tile:hover { border-color: var(--accent-blue); background: rgba(74, 144, 217, 0.06); }
+  .dash-tile .tile-icon { font-size: 18px; margin-bottom: 6px; }
+  .dash-tile .tile-name { font-size: 11px; font-weight: 600; color: var(--text); line-height: 1.3; }
+
+  /* ── Dashboard detail cards ── */
+  .dash-detail {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 22px 24px; transition: border-color 0.2s;
+  }
+  .dash-detail:hover { border-color: var(--border-highlight); }
+  .dash-detail .dd-header {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
+  }
+  .dash-detail .dd-num {
+    width: 28px; height: 28px; border-radius: 6px; display: flex;
+    align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+  }
+  .dash-detail .dd-name { font-size: 15px; font-weight: 700; }
+  .dash-detail .dd-desc {
+    font-size: 13px; color: var(--text-muted); line-height: 1.55; margin-bottom: 10px;
+  }
+  .dash-detail ul { list-style: none; padding: 0; }
+  .dash-detail ul li {
+    font-size: 12px; color: var(--text-muted); padding: 3px 0 3px 14px; position: relative;
+    line-height: 1.45;
+  }
+  .dash-detail ul li::before {
+    content: ''; position: absolute; left: 0; top: 9px;
+    width: 4px; height: 4px; border-radius: 50%;
+  }
+
+  /* ── Timeline detailed ── */
+  .tl-detail {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px 28px; position: relative; overflow: hidden;
+  }
+  .tl-detail .tl-accent {
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .tl-detail .tl-week-label {
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    font-weight: 700; margin-bottom: 4px;
+  }
+  .tl-detail .tl-dates {
+    font-size: 12px; color: var(--text-muted); margin-bottom: 4px;
+  }
+  .tl-detail .tl-hours-label {
+    font-size: 11px; color: var(--text-muted); margin-bottom: 12px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--border);
+  }
+  .tl-detail h4 {
+    font-size: 15px; font-weight: 700; margin-bottom: 12px;
+  }
+  .tl-detail .tl-tasks { list-style: none; padding: 0; }
+  .tl-detail .tl-tasks li {
+    font-size: 13px; color: var(--text-muted); padding: 4px 0 4px 16px;
+    position: relative; line-height: 1.5;
+  }
+  .tl-detail .tl-tasks li::before {
+    content: ''; position: absolute; left: 0; top: 10px;
+    width: 5px; height: 5px; border-radius: 50%;
+  }
+  .tl-detail .tl-dashboards {
+    margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .tl-detail .tl-dashboards span {
+    font-size: 11px; font-weight: 600; padding: 4px 10px;
+    border-radius: 4px; background: var(--surface-alt); border: 1px solid var(--border);
+  }
+
+  /* ── Team cards ── */
+  .team-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 22px 24px; text-align: center; transition: border-color 0.2s;
+  }
+  .team-card:hover { border-color: var(--border-highlight); }
+  .team-card .tc-avatar {
+    width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700; color: #fff;
+  }
+  .team-card .tc-name { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .team-card .tc-role { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+  /* ── Risk / mitigation ── */
+  .risk-panel {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px 28px;
+  }
+  .risk-panel h4 {
+    font-size: 14px; font-weight: 700; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .risk-panel ul { list-style: none; padding: 0; }
+  .risk-panel ul li {
+    font-size: 13px; color: var(--text-muted); padding: 4px 0 4px 16px;
+    position: relative; line-height: 1.5;
+  }
+  .risk-panel ul li::before {
+    content: ''; position: absolute; left: 0; top: 10px;
+    width: 5px; height: 5px; border-radius: 50%;
+  }
+
+  /* ── Outcomes ── */
+  .outcome-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 0; border-bottom: 1px solid var(--border);
+  }
+  .outcome-item:last-child { border-bottom: none; }
+  .outcome-check {
+    width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; margin-top: 1px;
+  }
+  .outcome-text { font-size: 14px; line-height: 1.5; }
+  .outcome-text strong { color: var(--text); }
+  .outcome-text span { color: var(--text-muted); }
+
+  /* ── Cost bar ── */
+  .cost-section {
+    padding: 24px 32px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .cost-title {
+    font-size: 13px; font-weight: 700; color: var(--text-muted);
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+  .cost-items { display: flex; gap: 32px; align-items: center; }
+  .cost-item { text-align: center; }
+  .cost-item .cost-val { font-size: 18px; font-weight: 700; }
+  .cost-item .cost-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .cost-total { text-align: center; padding-left: 32px; border-left: 1px solid var(--border); }
+  .cost-total .cost-val { font-size: 24px; font-weight: 700; color: var(--accent-teal); }
+  .cost-total .cost-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ── Legend ── */
+  .legend-bar {
+    display: flex; gap: 24px; flex-wrap: wrap; align-items: center;
+    padding: 16px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  }
+  .legend-bar .legend-title {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text-muted); font-weight: 700;
+  }
+  .legend-bar .legend-item {
+    display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted);
+  }
+  .legend-bar .legend-item span {
+    display: inline-block; width: 24px; height: 2px;
+  }
+
+  @media (max-width: 1024px) {
+    .dash-grid { grid-template-columns: repeat(2, 1fr); }
+    .embed-inner { flex-direction: column; }
+    .cost-section { flex-direction: column; gap: 16px; text-align: center; }
+    .cost-total { padding-left: 0; border-left: none; padding-top: 16px; border-top: 1px solid var(--border); }
+  }
+  @media print {
+    body { background: #fff; color: #1a1a2e; }
+    .node-card, .panel, .dash-detail, .tl-detail, .team-card, .risk-panel, .stat-card { border-color: #ddd; background: #f8f9fa; }
+    .hero h1, .section h2 { -webkit-text-fill-color: #1a1a2e; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- ════════════════════════════════════════════════
+       HERO
+       ════════════════════════════════════════════════ -->
+  <div class="hero">
+    <div class="hero-label">Hackathon Initiative &middot; April–May 2026</div>
+    <h1>Surgimate Analytics Hub<br>Hackathon Plan</h1>
+    <p>A focused weekend hackathon to accelerate delivery of Surgimate's next-generation analytics platform — compressing what would typically take multiple quarters into a 3–4 weekend execution window.</p>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════════
+       OVERVIEW
+       ════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label"><span class="dot" style="background: var(--accent-teal)"></span> Overview</div>
+    <h2>Why a Hackathon?</h2>
+    <p class="section-subtitle">This work is being executed by core engineering team members who actively build and maintain the Surgimate codebase — ensuring seamless integration, alignment with existing architecture, and faster iteration compared to outsourced or isolated efforts.</p>
+    <div class="grid-3">
+      <div class="panel">
+        <div class="panel-title" style="color: var(--accent-teal);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Deliver Fast
+        </div>
+        <ul style="--bullet-color: var(--accent-teal);">
+          <li>High-impact dashboards delivered quickly</li>
+          <li>Work outside standard sprint capacity</li>
+          <li>Weekend-only execution model</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <div class="panel-title" style="color: var(--accent-blue);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+          Scalable Foundation
+        </div>
+        <ul style="--bullet-color: var(--accent-blue);">
+          <li>Establish analytics infrastructure</li>
+          <li>Reusable data pipeline architecture</li>
+          <li>Foundation for future intelligence</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <div class="panel-title" style="color: var(--accent-violet);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          Core Team
+        </div>
+        <ul style="--bullet-color: var(--accent-violet);">
+          <li>No handoff or rework required</li>
+          <li>Alignment with existing standards</li>
+          <li>Higher quality than outsourced</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════════
+       BUSINESS OBJECTIVE
+       ════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label"><span class="dot" style="background: var(--accent-rose)"></span> Business Objective</div>
+    <h2>What We're Solving</h2>
+    <p class="section-subtitle">Replace and expand Surgimate's current reporting capabilities with actionable, drill-down analytics for leadership and operations — and lay the groundwork for predictive and operational intelligence features.</p>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════════
+       SCOPE SUMMARY
+       ════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label"><span class="dot" style="background: var(--accent-sky)"></span> Scope Summary</div>
+    <h2>Committed Delivery</h2>
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-val" style="color: var(--accent-blue);">7</div>
+        <div class="stat-label">Core Dashboards</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" style="color: var(--accent-teal);">~100</div>
+        <div class="stat-label">Analytical Widgets</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" style="color: var(--accent-violet);">4</div>
+        <div class="stat-label">Strategic Pillars</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" style="color: var(--accent-orange);">~70 hrs</div>
+        <div class="stat-label">Per Engineer</div>
+      </div>
+    </div>
+    <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">Focused on highest-impact operational and executive insights. Additional dashboards are identified but intentionally out of scope for this hackathon to ensure focused, high-quality delivery. Aligned to the <strong style="color: var(--text);">Analytics Hub Complete Dashboard &amp; Report Reference Guide (v2.0)</strong> — all dashboards will follow defined metric calculations, align to Surgimate's analytics pillars, and be demo-ready for prospects and customers.</p>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════════
+       STRATEGIC ALIGNMENT
+       ════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label"><span class="dot" style="background: var(--accent-emerald)"></span> Strategic Alignment</div>
+    <h2>Four Core Pillars</h2>
+    <p class="section-subtitle">Every dashboard and widget maps to one or more of these strategic pillars, ensuring all analytics work directly drives measurable business outcomes.</p>
+    <div class="pillars-row">
+      <div class="pillar-badge" style="border-left: 3px solid var(--accent-rose);">
+        <span>🚫</span> Reduce Cancellations
+      </div>
+      <div class="pillar-badge" style="border-left: 3px solid var(--accent-emerald);">
+        <span>⬆️</span> Increase Surgical Throughput
+      </div>
+      <div class="pillar-badge" style="border-left: 3px solid var(--accent-blue);">
+        <span>🏥</span> Maximize OR Utilization
+      </div>
+      <div class="pillar-badge" style="border-left: 3px solid var(--accent-violet);">
+        <span>📅</span> Improve Scheduling Predictability
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+
+  <!-- ════════════════════════════════════════════════
+       ARCHITECTURE DIAGRAM
+       ════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label"><span class="dot" style="background: var(--accent-blue)"></span> Technical Architecture</div>
+    <h2>Technology Stack &amp; Infrastructure</h2>
+    <p class="section-subtitle">End-to-end data pipeline from the Surgimate PostgreSQL database through Apache Hop ETL, into ClickHouse for analytics, visualized via Apache Superset, and embedded back into the Surgimate Angular application.</p>
+
+    <div class="arch-canvas">
+
+      <!-- TIER 1: Source -->
+      <div class="tier">
+        <div class="tier-label">
+          <span class="dot" style="background: var(--accent-emerald)"></span>
+          Source Layer — Operational Database
+        </div>
+        <div class="nodes-row">
+          <div class="node-card wide" style="--glow-color: var(--glow-teal)">
+            <div class="node-icon" style="background: linear-gradient(135deg, #10B981, #059669); color: #fff;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4.03 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/></svg>
+            </div>
+            <div class="node-name">PostgreSQL</div>
+            <div class="node-tech" style="color: var(--accent-emerald);">Operational Database</div>
+            <div class="node-desc">Primary Surgimate production database. Read replica used as ETL source to avoid production load impact.</div>
+            <div class="node-details">
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-emerald)"></span>Read replica instance for analytics extraction</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-emerald)"></span>Cases, schedules, providers, facilities, forms</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-emerald)"></span>Rails ActiveRecord schema as source of truth</div>
+            </div>
+          </div>
+          <div class="node-card" style="--glow-color: var(--glow-rose)">
+            <div class="node-icon" style="background: linear-gradient(135deg, #F43F5E, #E11D48); color: #fff;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+            </div>
+            <div class="node-name">Ruby on Rails</div>
+            <div class="node-tech" style="color: var(--accent-rose);">Backend API</div>
+            <div class="node-desc">Surgimate backend. Manages authentication, business logic, and provides the API layer consumed by the Angular frontend.</div>
+            <div class="node-details">
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-rose)"></span>Manages Superset guest token generation</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-rose)"></span>Role-based access control for dashboards</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-rose)"></span>API endpoints for embedding configuration</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow: Source → ETL -->
+      <div class="flow-section">
+        <div class="flow-arrow" style="--arrow-color: var(--accent-orange)">
+          <div class="arrow-line"><div class="particle" style="background: var(--accent-orange)"></div></div>
+          <div class="flow-label" style="color: var(--accent-orange)">Nightly Extract</div>
+          <div class="arrow-line"><div class="particle" style="background: var(--accent-orange); animation-delay: 0.6s"></div></div>
+        </div>
+      </div>
+
+      <!-- TIER 2: ETL -->
+      <div class="tier">
+        <div class="tier-label">
+          <span class="dot" style="background: var(--accent-orange)"></span>
+          ETL Layer — Data Transformation
+        </div>
+        <div class="nodes-row">
+          <div class="node-card wide" style="--glow-color: var(--glow-orange)">
+            <div class="node-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706); color: #fff;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
+            <div class="node-name">Apache Hop</div>
+            <div class="node-tech" style="color: var(--accent-orange);">ETL Pipeline Engine</div>
+            <div class="node-desc">Orchestrates data extraction from PostgreSQL, applies transformations, and loads analytical models into ClickHouse.</div>
+            <div class="node-details">
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-orange)"></span>Nightly batch processing pipeline</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-orange)"></span>Incremental updates via last_modified timestamps</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-orange)"></span>One-time historical load (1 year, pruned)</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-orange)"></span>Data cleansing, joins, and aggregation logic</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow: ETL → ClickHouse -->
+      <div class="flow-section">
+        <div class="flow-arrow" style="--arrow-color: var(--accent-amber)">
+          <div class="arrow-line"><div class="particle" style="background: var(--accent-amber)"></div></div>
+          <div class="flow-label" style="color: var(--accent-amber)">Transform &amp; Load</div>
+          <div class="arrow-line"><div class="particle" style="background: var(--accent-amber); animation-delay: 0.8s"></div></div>
+        </div>
+      </div>
+
+      <!-- TIER 3: ClickHouse -->
+      <div class="tier">
+        <div class="tier-label">
+          <span class="dot" style="background: var(--accent-amber)"></span>
+          Analytical Layer — Optimized Storage
+        </div>
+        <div class="nodes-row">
+          <div class="node-card wide" style="--glow-color: var(--glow-orange)">
+            <div class="node-icon" style="background: linear-gradient(135deg, #FBBF24, #D97706); color: #1a1a2e;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16"/><path d="M4 10h16"/><path d="M4 14h16"/><path d="M4 18h16"/><rect x="2" y="3" width="20" height="18" rx="2"/></svg>
+            </div>
+            <div class="node-name">ClickHouse</div>
+            <div class="node-tech" style="color: var(--accent-amber);">Columnar OLAP Database</div>
+            <div class="node-desc">High-performance columnar database optimized for analytical queries. Powers all dashboard visualizations with sub-second response times.</div>
+            <div class="node-details">
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-amber)"></span>30–40 relational analytical tables</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-amber)"></span>Optimized for complex joins and aggregations</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-amber)"></span>Columnar storage for fast OLAP queries</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-amber)"></span>Designed for horizontal scalability</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow: ClickHouse → Superset -->
+      <div class="flow-section">
+        <div class="flow-arrow" style="--arrow-color: var(--accent-blue)">
+          <div class="arrow-line"><div class="particle" style="background: var(--accent-blue)"></div></div>
+          <div class="flow-label" style="color: var(--accent-blue)">SQL Queries</div>
+          <div class="arrow-line"><div class="particle" style="background: var(--accent-blue); animation-delay: 0.5s"></div></div>
+        </div>
+      </div>
+
+      <!-- TIER 4: Superset -->
+      <div class="tier">
+        <div class="tier-label">
+          <span class="dot" style="background: var(--accent-blue)"></span>
+          Visualization Layer — Dashboard Engine
+        </div>
+        <div class="nodes-row">
+          <div class="node-card wide" style="--glow-color: var(--glow-blue)">
+            <div class="node-icon" style="background: linear-gradient(135deg, #4A90D9, #2563EB); color: #fff;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+            </div>
+            <div class="node-name">Apache Superset</div>
+            <div class="node-tech" style="color: var(--accent-blue);">Dashboard &amp; Visualization</div>
+            <div class="node-desc">Open-source BI platform providing interactive dashboards with filters, drilldowns, and ~100 analytical widgets across 7 core dashboards.</div>
+            <div class="node-details">
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-blue)"></span>7 core dashboards, ~100 widgets</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-blue)"></span>Cross-filtering and drill-down support</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-blue)"></span>Guest token auth for embedded access</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-blue)"></span>REST API for programmatic integration</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow: Superset → Embedded -->
+      <div class="flow-section">
+        <div class="flow-arrow" style="--arrow-color: var(--accent-violet)">
+          <div class="arrow-line"><div class="particle" style="background: var(--accent-violet)"></div></div>
+          <div class="flow-label" style="color: var(--accent-violet)">Embedded iFrame + Guest Token Auth</div>
+          <div class="arrow-line"><div class="particle" style="background: var(--accent-violet); animation-delay: 0.7s"></div></div>
+        </div>
+      </div>
+
+      <!-- TIER 5: Embedded -->
+      <div class="tier">
+        <div class="tier-label">
+          <span class="dot" style="background: var(--accent-violet)"></span>
+          Presentation Layer — Embedded Analytics
+        </div>
+        <div class="embed-container">
+          <div class="embed-badge">Surgimate Application</div>
+          <div class="embed-inner">
+            <div class="embed-app">
+              <div class="app-header">
+                <div class="app-icon" style="background: linear-gradient(135deg, var(--accent-rose), #BE185D); color: #fff;">S</div>
+                <div>
+                  <div style="font-size: 14px; font-weight: 700;">Surgimate</div>
+                  <div style="font-size: 11px; color: var(--text-muted);">Angular Frontend</div>
+                </div>
+              </div>
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Application Shell &amp; Navigation</div>
+              <div class="node-details" style="border-top: none; padding-top: 0; margin-top: 0;">
+                <div class="detail-item"><span class="bullet" style="background: var(--accent-violet)"></span>Angular component wraps Superset embed SDK</div>
+                <div class="detail-item"><span class="bullet" style="background: var(--accent-violet)"></span>Rails API provides guest tokens via Superset REST API</div>
+                <div class="detail-item"><span class="bullet" style="background: var(--accent-violet)"></span>Role-based dashboard visibility</div>
+                <div class="detail-item"><span class="bullet" style="background: var(--accent-violet)"></span>Seamless navigation within Surgimate UI</div>
+                <div class="detail-item"><span class="bullet" style="background: var(--accent-violet)"></span>Consistent styling via CSS overrides</div>
+              </div>
+            </div>
+            <div class="embed-dashboards">
+              <div class="dash-header">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                Embedded Superset Dashboards
+              </div>
+              <div class="dash-grid">
+                <div class="dash-tile"><div class="tile-icon">📊</div><div class="tile-name">Executive Scorecard</div></div>
+                <div class="dash-tile"><div class="tile-icon">🎯</div><div class="tile-name">KPI Center</div></div>
+                <div class="dash-tile"><div class="tile-icon">📈</div><div class="tile-name">Volume Tracker</div></div>
+                <div class="dash-tile"><div class="tile-icon">🗓️</div><div class="tile-name">Scheduling Health</div></div>
+                <div class="dash-tile"><div class="tile-icon">👥</div><div class="tile-name">Adoption &amp; Engagement</div></div>
+                <div class="dash-tile"><div class="tile-icon">🔍</div><div class="tile-name">Data Hygiene</div></div>
+                <div class="dash-tile"><div class="tile-icon">📋</div><div class="tile-name">Report Library</div></div>
+                <div class="dash-tile" style="border-style: dashed; opacity: 0.5;"><div class="tile-icon">➕</div><div class="tile-name">Future Dashboards</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /arch-canvas -->
+
+    <!-- Legend -->
+    <div class="legend-bar" style="margin-top: 24px;">
+      <div class="legend-title">Data Flow Legend</div>
+      <div class="legend-item"><span style="background: var(--accent-orange);"></span> Nightly ETL Extract</div>
+      <div class="legend-item"><span style="background: var(--accent-amber);"></span> Transform &amp; Load</div>
+      <div class="legend-item"><span style="background: var(--accent-blue);"></span> Analytical Queries</div>
+      <div class="legend-item"><span style="background: var(--accent-violet);"></span> Embedded iFrame</div>
+      <div class="legend-item"><span style="background: var(--accent-rose);"></span> Auth Token (Rails &rarr; Superset &rarr; Angular)</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+
+  <!-- ════════════════════════════════════════════════
+       DASHBOARD BREAKDOWN
+       ════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label"><span class="dot" style="background: var(--accent-sky)"></span> Dashboard Breakdown</div>
+    <h2>7 Committed Dashboards</h2>
+    <p class="section-subtitle">Each dashboard is designed to deliver actionable insights aligned to Surgimate's core strategic pillars. All will be demo-ready for prospects and customers.</p>
+
+    <div class="grid-2" style="margin-bottom: 20px;">
+      <div class="dash-detail">
+        <div class="dd-header">
+          <div class="dd-num" style="background: rgba(74, 144, 217, 0.15); color: var(--accent-blue);">1</div>
+          <div class="dd-name">Executive Scorecard</div>
+        </div>
+        <div class="dd-desc">Leadership command center providing a high-level view across all strategic pillars.</div>
+        <ul style="--bullet-color: var(--accent-blue);">
+          <li>KPIs across all 4 pillars</li>
+          <li>Drill-down into cancellations and case data</li>
+          <li>Executive-level trend indicators</li>
+        </ul>
+      </div>
+      <div class="dash-detail">
+        <div class="dd-header">
+          <div class="dd-num" style="background: rgba(139, 92, 246, 0.15); color: var(--accent-violet);">2</div>
+          <div class="dd-name">KPI Center</div>
+        </div>
+        <div class="dd-desc">Target vs Actual tracking with variance analysis and ROI storytelling.</div>
+        <ul style="--bullet-color: var(--accent-violet);">
+          <li>Target vs Actual tracking</li>
+          <li>Variance + trend indicators</li>
+          <li>ROI storytelling</li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid-2" style="margin-bottom: 20px;">
+      <div class="dash-detail">
+        <div class="dd-header">
+          <div class="dd-num" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald);">3</div>
+          <div class="dd-name">Volume Tracker</div>
+        </div>
+        <div class="dd-desc">Case volume trends with breakdowns by provider, facility, and procedure mix.</div>
+        <ul style="--bullet-color: var(--accent-emerald);">
+          <li>Case volume trends over time</li>
+          <li>Provider/facility breakdown</li>
+          <li>Procedure mix insights</li>
+        </ul>
+      </div>
+      <div class="dash-detail">
+        <div class="dd-header">
+          <div class="dd-num" style="background: rgba(245, 158, 11, 0.15); color: var(--accent-orange);">4</div>
+          <div class="dd-name">Scheduling Health</div>
+        </div>
+        <div class="dd-desc">Cancellation patterns, pipeline efficiency, and scheduling bottleneck identification.</div>
+        <ul style="--bullet-color: var(--accent-orange);">
+          <li>Cancellation patterns</li>
+          <li>Pipeline efficiency metrics</li>
+          <li>Scheduling bottlenecks</li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="dash-detail">
+        <div class="dd-header">
+          <div class="dd-num" style="background: rgba(56, 189, 248, 0.15); color: var(--accent-sky);">5</div>
+          <div class="dd-name">Adoption &amp; Engagement</div>
+        </div>
+        <div class="dd-desc">Platform usage and adoption metrics.</div>
+        <ul style="--bullet-color: var(--accent-sky);">
+          <li>Platform usage metrics</li>
+          <li>Checklist completion</li>
+          <li>Forms + login tracking</li>
+        </ul>
+      </div>
+      <div class="dash-detail">
+        <div class="dd-header">
+          <div class="dd-num" style="background: rgba(244, 63, 94, 0.15); color: var(--accent-rose);">6</div>
+          <div class="dd-name">Data Hygiene</div>
+        </div>
+        <div class="dd-desc">Data quality and completeness monitoring.</div>
+        <ul style="--bullet-color: var(--accent-rose);">
+          <li>Missing data tracking</li>
+          <li>Draft case management</li>
+          <li>Data completeness scoring</li>
+        </ul>
+      </div>
+      <div class="dash-detail">
+        <div class="dd-header">
+          <div class="dd-num" style="background: rgba(251, 191, 36, 0.15); color: var(--accent-amber);">7</div>
+          <div class="dd-name">Report Library</div>
+        </div>
+        <div class="dd-desc">Operational reports with export capabilities.</div>
+        <ul style="--bullet-color: var(--accent-amber);">
+          <li>22 operational reports</li>
+          <li>Drill-down and export</li>
+          <li>Foundation for ad-hoc reporting</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+
+  <!-- ════════════════════════════════════════════════
+       HACKATHON TIMELINE (DETAILED)
+       ════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label"><span class="dot" style="background: var(--accent-orange)"></span> Hackathon Timeline</div>
+    <h2>Execution Plan</h2>
+    <p class="section-subtitle">Four focused weekends across April–May 2026. Each weekend has a clear focus area with defined deliverables.</p>
+
+    <div class="grid-2">
+      <!-- Weekend 1 -->
+      <div class="tl-detail">
+        <div class="tl-accent" style="background: var(--accent-emerald);"></div>
+        <div class="tl-week-label" style="color: var(--accent-emerald);">Weekend 1 — Foundation</div>
+        <div class="tl-dates">Saturday, April 18 – Sunday, April 19</div>
+        <div class="tl-hours-label">Infrastructure Setup</div>
+        <h4>ETL Setup</h4>
+        <ul class="tl-tasks" style="--bullet-color: var(--accent-emerald);">
+          <li>PostgreSQL reader instance</li>
+          <li>Data pipeline creation</li>
+          <li>Manual bulk load (1-year dataset)</li>
+          <li>Nightly job configuration</li>
+        </ul>
+        <h4 style="margin-top: 14px;">Database</h4>
+        <ul class="tl-tasks" style="--bullet-color: var(--accent-emerald);">
+          <li>Schema design</li>
+          <li>Read/write optimization</li>
+        </ul>
+        <h4 style="margin-top: 14px;">Superset Setup</h4>
+        <ul class="tl-tasks" style="--bullet-color: var(--accent-emerald);">
+          <li>Environment configuration</li>
+          <li>Initial dashboard framework</li>
+        </ul>
+      </div>
+
+      <!-- Weekend 2 -->
+      <div class="tl-detail">
+        <div class="tl-accent" style="background: var(--accent-blue);"></div>
+        <div class="tl-week-label" style="color: var(--accent-blue);">Weekend 2 — Initial Dashboards + Embedding</div>
+        <div class="tl-dates">Saturday, May 2 – Sunday, May 3</div>
+        <div class="tl-hours-label">Dashboards + Product Integration</div>
+        <h4>Dashboards</h4>
+        <ul class="tl-tasks" style="--bullet-color: var(--accent-blue);">
+          <li>Executive Scorecard</li>
+          <li>KPI Center</li>
+        </ul>
+        <h4 style="margin-top: 14px;">Embedding &amp; Auth</h4>
+        <ul class="tl-tasks" style="--bullet-color: var(--accent-blue);">
+          <li>Role-based access implementation</li>
+          <li>Superset embedding into Surgimate</li>
+          <li>Initial navigation handling</li>
+          <li>Guest token auth flow (Rails &rarr; Superset &rarr; Angular)</li>
+        </ul>
+        <div class="tl-dashboards">
+          <span style="color: var(--accent-blue);">📊 Executive Scorecard</span>
+          <span style="color: var(--accent-violet);">🎯 KPI Center</span>
+        </div>
+      </div>
+
+      <!-- Weekend 3 -->
+      <div class="tl-detail">
+        <div class="tl-accent" style="background: var(--accent-orange);"></div>
+        <div class="tl-week-label" style="color: var(--accent-orange);">Weekend 3 — Expansion of Core Dashboards</div>
+        <div class="tl-dates">Friday, May 15 – Saturday, May 16</div>
+        <div class="tl-hours-label">Feature Expansion</div>
+        <h4>New Dashboards</h4>
+        <ul class="tl-tasks" style="--bullet-color: var(--accent-orange);">
+          <li>Volume Tracker</li>
+          <li>Scheduling Health</li>
+          <li>Adoption &amp; Engagement</li>
+        </ul>
+        <div class="tl-dashboards">
+          <span style="color: var(--accent-emerald);">📈 Volume Tracker</span>
+          <span style="color: var(--accent-orange);">🗓️ Scheduling Health</span>
+          <span style="color: var(--accent-sky);">👥 Adoption</span>
+        </div>
+      </div>
+
+      <!-- Weekend 4 -->
+      <div class="tl-detail">
+        <div class="tl-accent" style="background: var(--accent-violet);"></div>
+        <div class="tl-week-label" style="color: var(--accent-violet);">Weekend 4 — Final Core Delivery</div>
+        <div class="tl-dates">Friday, May 22 – Saturday, May 23</div>
+        <div class="tl-hours-label">Completion of Core Suite</div>
+        <h4>Final Dashboards</h4>
+        <ul class="tl-tasks" style="--bullet-color: var(--accent-violet);">
+          <li>Data Hygiene</li>
+          <li>Report Library</li>
+        </ul>
+        <h4 style="margin-top: 14px;">Productionize</h4>
+        <ul class="tl-tasks" style="--bullet-color: var(--accent-violet);">
+          <li>Production deployment</li>
+          <li>Performance optimization</li>
+          <li>Final QA and polish</li>
+        </ul>
+        <div class="tl-dashboards">
+          <span style="color: var(--accent-rose);">🔍 Data Hygiene</span>
+          <span style="color: var(--accent-amber);">📋 Report Library</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+
+  <!-- ════════════════════════════════════════════════
+       EXECUTION MODEL
+       ════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label"><span class="dot" style="background: var(--accent-violet)"></span> Execution Model</div>
+    <h2>Team &amp; Effort</h2>
+    <p class="section-subtitle">Three core engineers working in parallel across focused weekend sessions. ~70 hours per engineer, paid via spot bonus (June).</p>
+
+    <div class="grid-3">
+      <div class="team-card">
+        <div class="tc-avatar" style="background: linear-gradient(135deg, var(--accent-blue), #2563EB);">C</div>
+        <div class="tc-name">Chase</div>
+        <div class="tc-role">Infrastructure, embedding,<br>backend coordination</div>
+      </div>
+      <div class="team-card">
+        <div class="tc-avatar" style="background: linear-gradient(135deg, var(--accent-violet), #6D28D9);">R</div>
+        <div class="tc-name">Ramnish</div>
+        <div class="tc-role">Superset dashboards,<br>UI execution</div>
+      </div>
+      <div class="team-card">
+        <div class="tc-avatar" style="background: linear-gradient(135deg, var(--accent-emerald), #047857);">A</div>
+        <div class="tc-name">Altaf</div>
+        <div class="tc-role">Dashboard acceleration,<br>parallel delivery</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+
+  <!-- ════════════════════════════════════════════════
+       DATA STRATEGY
+       ════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label"><span class="dot" style="background: var(--accent-amber)"></span> Data Strategy</div>
+    <h2>Initial Load &amp; Ongoing Pipeline</h2>
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-title" style="color: var(--accent-amber);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Initial Load
+        </div>
+        <ul style="--bullet-color: var(--accent-amber);">
+          <li>One-time ingestion of 1 year of historical data</li>
+          <li>Data pruning for performance optimization</li>
+          <li>Manual bulk load during Weekend 1</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <div class="panel-title" style="color: var(--accent-teal);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Ongoing Pipeline
+        </div>
+        <ul style="--bullet-color: var(--accent-teal);">
+          <li>Nightly incremental updates</li>
+          <li>Intelligent schema for efficient joins</li>
+          <li>Designed for future real-time expansion</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+
+  <!-- ════════════════════════════════════════════════
+       RISKS & MITIGATION
+       ════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label"><span class="dot" style="background: var(--accent-rose)"></span> Risks &amp; Mitigation</div>
+    <h2>Key Risks &amp; Constraints</h2>
+    <div class="grid-2">
+      <div class="risk-panel">
+        <h4 style="color: var(--accent-rose);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Technical Risks
+        </h4>
+        <ul style="--bullet-color: var(--accent-rose);">
+          <li>Superset styling inconsistencies</li>
+          <li>Limited internal routing/navigation</li>
+          <li>External embedding constraints</li>
+          <li>Authentication/embedding complexity</li>
+        </ul>
+      </div>
+      <div class="risk-panel">
+        <h4 style="color: var(--accent-orange);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Execution Risks
+        </h4>
+        <ul style="--bullet-color: var(--accent-orange);">
+          <li>High scope compressed into short timeline</li>
+          <li>Weekend-only development bandwidth</li>
+          <li>Dependency on clean data modeling early</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top: 20px;">
+      <div class="panel-title" style="color: var(--accent-emerald);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Mitigation Strategy
+      </div>
+      <ul style="--bullet-color: var(--accent-emerald);">
+        <li>Parallel development across 3 engineers</li>
+        <li>Prioritize core dashboards first — defer remaining to post-hackathon</li>
+        <li>Focus on functionality over perfection</li>
+        <li>Weekend 1 front-loads all infrastructure risk</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+
+  <!-- ════════════════════════════════════════════════
+       EXPECTED OUTCOMES
+       ════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label"><span class="dot" style="background: var(--accent-teal)"></span> Expected Outcomes</div>
+    <h2>Deliverables &amp; Strategic Impact</h2>
+
+    <div class="grid-2">
+      <div class="panel" style="padding: 20px 28px;">
+        <div class="panel-title" style="color: var(--accent-teal); margin-bottom: 8px;">By End of Hackathon</div>
+        <div class="outcome-item">
+          <div class="outcome-check" style="background: rgba(45, 212, 191, 0.15); color: var(--accent-teal);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="outcome-text"><strong>7 production-ready dashboards</strong></div>
+        </div>
+        <div class="outcome-item">
+          <div class="outcome-check" style="background: rgba(45, 212, 191, 0.15); color: var(--accent-teal);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="outcome-text"><strong>Functional embedded analytics experience</strong></div>
+        </div>
+        <div class="outcome-item">
+          <div class="outcome-check" style="background: rgba(45, 212, 191, 0.15); color: var(--accent-teal);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="outcome-text"><strong>Scalable data infrastructure</strong> <span>(ETL + ClickHouse)</span></div>
+        </div>
+        <div class="outcome-item">
+          <div class="outcome-check" style="background: rgba(45, 212, 191, 0.15); color: var(--accent-teal);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="outcome-text"><strong>Foundation for advanced analytics</strong></div>
+        </div>
+      </div>
+
+      <div class="panel" style="padding: 20px 28px;">
+        <div class="panel-title" style="color: var(--accent-blue); margin-bottom: 8px;">Strategic Impact</div>
+        <div class="outcome-item">
+          <div class="outcome-check" style="background: rgba(74, 144, 217, 0.15); color: var(--accent-blue);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <div class="outcome-text"><strong>Accelerates analytics roadmap</strong> <span>by months</span></div>
+        </div>
+        <div class="outcome-item">
+          <div class="outcome-check" style="background: rgba(74, 144, 217, 0.15); color: var(--accent-blue);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+          </div>
+          <div class="outcome-text"><strong>Enables data-driven decisions</strong> <span>across customers</span></div>
+        </div>
+        <div class="outcome-item">
+          <div class="outcome-check" style="background: rgba(74, 144, 217, 0.15); color: var(--accent-blue);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          </div>
+          <div class="outcome-text"><strong>Positions product</strong> <span>for future predictive capabilities</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+
+  <!-- ════════════════════════════════════════════════
+       COST ESTIMATE (de-emphasized, at bottom)
+       ════════════════════════════════════════════════ -->
+  <div class="section" style="margin-bottom: 0;">
+    <div class="section-label"><span class="dot" style="background: var(--text-muted)"></span> Cost Estimate</div>
+    <div class="cost-section" style="opacity: 0.85;">
+      <div class="cost-title">Estimated Monthly Infrastructure Cost</div>
+      <div class="cost-items">
+        <div class="cost-item">
+          <div class="cost-val" style="color: var(--accent-orange)">$600</div>
+          <div class="cost-label">Apache Hop</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-val" style="color: var(--accent-amber)">$750</div>
+          <div class="cost-label">ClickHouse</div>
+        </div>
+        <div class="cost-item">
+          <div class="cost-val" style="color: var(--accent-blue)">$750</div>
+          <div class="cost-label">Apache Superset</div>
+        </div>
+      </div>
+      <div class="cost-total">
+        <div class="cost-val">$2,100/mo</div>
+        <div class="cost-label">Total Estimated Platform Cost</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════════════
+       FOOTER
+       ════════════════════════════════════════════════ -->
+  <div style="margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+    <div style="font-size: 11px; color: var(--text-muted);">Surgimate Analytics Platform &mdash; Hackathon Plan &middot; April–May 2026</div>
+    <div style="font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; font-weight: 600;">Internal &amp; Confidential</div>
+  </div>
+
+</div><!-- /page-wrapper -->
+
+</body>
+</html>
