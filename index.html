@@ -636,7 +636,7 @@
     <h2>Committed Delivery</h2>
     <div class="stat-row">
       <div class="stat-card">
-        <div class="stat-val" style="color: var(--accent-blue);">7</div>
+        <div class="stat-val" style="color: var(--accent-blue);">8</div>
         <div class="stat-label">Core Dashboards</div>
       </div>
       <div class="stat-card">
@@ -652,7 +652,7 @@
         <div class="stat-label">Per Engineer</div>
       </div>
     </div>
-    <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">Focused on highest-impact operational and executive insights. Additional dashboards are identified but intentionally out of scope for this hackathon to ensure focused, high-quality delivery. Aligned to the <strong style="color: var(--text);">Analytics Hub Complete Dashboard &amp; Report Reference Guide (v2.0)</strong> — all dashboards will follow defined metric calculations, align to Surgimate's analytics pillars, and be demo-ready for prospects and customers.</p>
+    <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">Focused on highest-impact operational and executive insights. Additional dashboards are identified but intentionally out of scope for this hackathon to ensure focused, high-quality delivery. Aligned to the <a href="https://docs.google.com/document/d/15d0f5Smq5xnoabUkmiuGukp9ygKIc4_U/edit" target="_blank" style="color: var(--accent-blue); text-decoration: underline; font-weight: 700;">Analytics Hub Complete Dashboard &amp; Report Reference Guide</a> — all dashboards will follow defined metric calculations, align to Surgimate's analytics pillars, and be demo-ready for prospects and customers.</p>
   </div>
 
 
@@ -688,28 +688,28 @@
   <div class="section">
     <div class="section-label"><span class="dot" style="background: var(--accent-blue)"></span> Technical Architecture</div>
     <h2>Technology Stack &amp; Infrastructure</h2>
-    <p class="section-subtitle">End-to-end data pipeline from the Surgimate PostgreSQL database through Apache Hop ETL, into ClickHouse for analytics, visualized via Apache Superset, and embedded back into the Surgimate Angular application.</p>
+    <p class="section-subtitle">Real-time event-driven pipeline where Rails, FHIR, and Connect publish resource changes to a shared SNS topic, fanning out to dedicated SQS queues and Lambda functions (Python/Go) for OpenSearch reindexing, ClickHouse analytics, and FHIR notifications. Lambdas read full records from a PostgreSQL Reader Instance, with results visualized via Apache Superset and embedded into the Surgimate Angular application.</p>
 
     <div class="arch-canvas">
 
-      <!-- TIER 1: Source -->
+      <!-- TIER 1: Source — Event Publishers -->
       <div class="tier">
         <div class="tier-label">
           <span class="dot" style="background: var(--accent-emerald)"></span>
-          Source Layer — Operational Database
+          Source Layer — Event Publishers
         </div>
         <div class="nodes-row">
-          <div class="node-card wide" style="--glow-color: var(--glow-teal)">
+          <div class="node-card" style="--glow-color: var(--glow-teal)">
             <div class="node-icon" style="background: linear-gradient(135deg, #10B981, #059669); color: #fff;">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4.03 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/></svg>
             </div>
             <div class="node-name">PostgreSQL</div>
             <div class="node-tech" style="color: var(--accent-emerald);">Operational Database</div>
-            <div class="node-desc">Primary Surgimate production database. Read replica used as ETL source to avoid production load impact.</div>
+            <div class="node-desc">Primary Surgimate production database. Source of truth for all surgical data.</div>
             <div class="node-details">
-              <div class="detail-item"><span class="bullet" style="background: var(--accent-emerald)"></span>Read replica instance for analytics extraction</div>
               <div class="detail-item"><span class="bullet" style="background: var(--accent-emerald)"></span>Cases, schedules, providers, facilities, forms</div>
               <div class="detail-item"><span class="bullet" style="background: var(--accent-emerald)"></span>Rails ActiveRecord schema as source of truth</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-emerald)"></span>Reader instance for Lambda data access</div>
             </div>
           </div>
           <div class="node-card" style="--glow-color: var(--glow-rose)">
@@ -718,54 +718,167 @@
             </div>
             <div class="node-name">Ruby on Rails</div>
             <div class="node-tech" style="color: var(--accent-rose);">Backend API</div>
-            <div class="node-desc">Surgimate backend. Manages authentication, business logic, and provides the API layer consumed by the Angular frontend.</div>
+            <div class="node-desc">Surgimate backend. Publishes resource changed events to SNS on every create/update.</div>
             <div class="node-details">
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-rose)"></span>Publishes events to Resource Changed SNS Topic</div>
               <div class="detail-item"><span class="bullet" style="background: var(--accent-rose)"></span>Manages Superset guest token generation</div>
               <div class="detail-item"><span class="bullet" style="background: var(--accent-rose)"></span>Role-based access control for dashboards</div>
-              <div class="detail-item"><span class="bullet" style="background: var(--accent-rose)"></span>API endpoints for embedding configuration</div>
+            </div>
+          </div>
+          <div class="node-card" style="--glow-color: rgba(56, 189, 248, 0.15)">
+            <div class="node-icon" style="background: linear-gradient(135deg, #38BDF8, #0284C7); color: #fff;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.8 2.3A.3.3 0 105 2H4a2 2 0 00-2 2v5a2 2 0 002 2h1a2 2 0 002-2V5a2 2 0 00-2-2h-.8z"/><path d="M8 2h4a2 2 0 012 2v5a2 2 0 01-2 2H8a2 2 0 01-2-2V4a2 2 0 012-2z"/><path d="M14 2h1a2 2 0 012 2v3a2 2 0 01-2 2h-1"/><path d="M4 15h16"/><path d="M4 19h16"/></svg>
+            </div>
+            <div class="node-name">FHIR</div>
+            <div class="node-tech" style="color: var(--accent-sky);">Interoperability</div>
+            <div class="node-desc">FHIR interoperability layer. Resource changes publish events to the shared SNS topic.</div>
+            <div class="node-details">
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-sky)"></span>Publishes FHIR resource change events</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-sky)"></span>Shared event bus with Rails &amp; Connect</div>
+            </div>
+          </div>
+          <div class="node-card" style="--glow-color: var(--glow-teal)">
+            <div class="node-icon" style="background: linear-gradient(135deg, #2DD4BF, #0D9488); color: #fff;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 7h3a5 5 0 015 5 5 5 0 01-5 5h-3m-6 0H6a5 5 0 01-5-5 5 5 0 015-5h3"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            </div>
+            <div class="node-name">Connect</div>
+            <div class="node-tech" style="color: var(--accent-teal);">Integration Platform</div>
+            <div class="node-desc">Integration platform. External system changes publish events to the shared SNS topic.</div>
+            <div class="node-details">
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-teal)"></span>Publishes integration change events</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-teal)"></span>Shared event bus with Rails &amp; FHIR</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Flow: Source → ETL -->
+      <!-- Flow: Source → Event Bus -->
       <div class="flow-section">
         <div class="flow-arrow" style="--arrow-color: var(--accent-orange)">
           <div class="arrow-line"><div class="particle" style="background: var(--accent-orange)"></div></div>
-          <div class="flow-label" style="color: var(--accent-orange)">Nightly Extract</div>
+          <div class="flow-label" style="color: var(--accent-orange)">Publishes Events</div>
           <div class="arrow-line"><div class="particle" style="background: var(--accent-orange); animation-delay: 0.6s"></div></div>
         </div>
       </div>
 
-      <!-- TIER 2: ETL -->
+      <!-- TIER 2: Event Bus — SNS Topic -->
       <div class="tier">
         <div class="tier-label">
           <span class="dot" style="background: var(--accent-orange)"></span>
-          ETL Layer — Data Transformation
+          Event Bus — Resource Changed SNS Topic
         </div>
         <div class="nodes-row">
           <div class="node-card wide" style="--glow-color: var(--glow-orange)">
             <div class="node-icon" style="background: linear-gradient(135deg, #F59E0B, #D97706); color: #fff;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4z"/></svg>
             </div>
-            <div class="node-name">Apache Hop</div>
-            <div class="node-tech" style="color: var(--accent-orange);">ETL Pipeline Engine</div>
-            <div class="node-desc">Orchestrates data extraction from PostgreSQL, applies transformations, and loads analytical models into ClickHouse.</div>
+            <div class="node-name">Resource Changed</div>
+            <div class="node-tech" style="color: var(--accent-orange);">AWS SNS Topic</div>
+            <div class="node-desc">Central event bus for all resource changes. Lightweight payload enables fan-out to multiple consumer queues.</div>
             <div class="node-details">
-              <div class="detail-item"><span class="bullet" style="background: var(--accent-orange)"></span>Nightly batch processing pipeline</div>
-              <div class="detail-item"><span class="bullet" style="background: var(--accent-orange)"></span>Incremental updates via last_modified timestamps</div>
-              <div class="detail-item"><span class="bullet" style="background: var(--accent-orange)"></span>One-time historical load (1 year, pruned)</div>
-              <div class="detail-item"><span class="bullet" style="background: var(--accent-orange)"></span>Data cleansing, joins, and aggregation logic</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-orange)"></span>Payload: {Event: id, Fields Changed: {fields...}}</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-orange)"></span>Fan-out to OpenSearch, ClickHouse, FHIR queues</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-orange)"></span>Built on existing OpenSearch async reindex pattern</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Flow: ETL → ClickHouse -->
+      <!-- Flow: Event Bus → Consumers -->
+      <div class="flow-section">
+        <div class="flow-arrow" style="--arrow-color: var(--accent-orange)">
+          <div class="arrow-line"><div class="particle" style="background: var(--accent-orange)"></div></div>
+          <div class="flow-label" style="color: var(--accent-orange)">Fan-Out to Queues</div>
+          <div class="arrow-line"><div class="particle" style="background: var(--accent-orange); animation-delay: 0.5s"></div></div>
+        </div>
+      </div>
+
+      <!-- TIER 3: Event Consumers — SQS + Lambda -->
+      <div class="tier">
+        <div class="tier-label">
+          <span class="dot" style="background: var(--accent-orange)"></span>
+          Event Consumers — SQS + Lambda (Python/Go)
+        </div>
+        <div class="nodes-row">
+          <div class="node-card" style="--glow-color: var(--glow-blue); opacity: 0.45; border-style: dashed;">
+            <div class="node-icon" style="background: linear-gradient(135deg, #4A90D9, #2563EB); color: #fff;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            </div>
+            <div class="node-name">OpenSearch Reindex</div>
+            <div class="node-tech" style="color: var(--accent-blue);">SQS Queue &rarr; Lambda</div>
+            <div class="node-desc">Reindexes surgical resources to AWS OpenSearch for full-text search.</div>
+            <div class="node-details">
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-blue)"></span>Reads full records from PostgreSQL Reader</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-blue)"></span>Reindexes to AWS OpenSearch</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-blue)"></span>Dead-letter queue for failures</div>
+            </div>
+          </div>
+          <div class="node-card" style="--glow-color: var(--glow-orange)">
+            <div class="node-icon" style="background: linear-gradient(135deg, #FBBF24, #D97706); color: #1a1a2e;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16"/><path d="M4 10h16"/><path d="M4 14h16"/><path d="M4 18h16"/><rect x="2" y="3" width="20" height="18" rx="2"/></svg>
+            </div>
+            <div class="node-name">ClickHouse Analytics</div>
+            <div class="node-tech" style="color: var(--accent-amber);">SQS Queue &rarr; Lambda</div>
+            <div class="node-desc">Transforms and writes analytical data to ClickHouse tables in real time.</div>
+            <div class="node-details">
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-amber)"></span>Reads full records from PostgreSQL Reader</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-amber)"></span>Transforms for ClickHouse schema</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-amber)"></span>Dead-letter queue for failures</div>
+            </div>
+          </div>
+          <div class="node-card" style="--glow-color: var(--glow-violet); opacity: 0.45; border-style: dashed;">
+            <div class="node-icon" style="background: linear-gradient(135deg, #8B5CF6, #6D28D9); color: #fff;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+            </div>
+            <div class="node-name">FHIR Notification</div>
+            <div class="node-tech" style="color: var(--accent-violet);">SQS Queue &rarr; Lambda</div>
+            <div class="node-desc">Processes FHIR resource change notifications for interoperability.</div>
+            <div class="node-details">
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-violet)"></span>Reads full records from PostgreSQL Reader</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-violet)"></span>Sends FHIR notifications</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-violet)"></span>Dead-letter queue for failures</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow: Consumers → Destinations -->
       <div class="flow-section">
         <div class="flow-arrow" style="--arrow-color: var(--accent-amber)">
           <div class="arrow-line"><div class="particle" style="background: var(--accent-amber)"></div></div>
-          <div class="flow-label" style="color: var(--accent-amber)">Transform &amp; Load</div>
+          <div class="flow-label" style="color: var(--accent-amber)">Reads Full Records &amp; Writes</div>
+          <div class="arrow-line"><div class="particle" style="background: var(--accent-amber); animation-delay: 0.8s"></div></div>
+        </div>
+      </div>
+
+      <!-- TIER 4: Data Access — PostgreSQL Reader -->
+      <div class="tier">
+        <div class="tier-label">
+          <span class="dot" style="background: var(--accent-emerald)"></span>
+          Data Access — Read Replica
+        </div>
+        <div class="nodes-row">
+          <div class="node-card wide" style="--glow-color: var(--glow-teal)">
+            <div class="node-icon" style="background: linear-gradient(135deg, #10B981, #059669); color: #fff;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4.03 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/></svg>
+            </div>
+            <div class="node-name">PostgreSQL Reader Instance</div>
+            <div class="node-tech" style="color: var(--accent-emerald);">Read Replica</div>
+            <div class="node-desc">Read-only replica of the production database. All Lambda functions read full records here, isolating analytical workloads from production.</div>
+            <div class="node-details">
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-emerald)"></span>Isolates reads from production database</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-emerald)"></span>Lambdas enrich lightweight SNS events with full records</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-emerald)"></span>Also used for historical backfill via Rails rake job</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flow: Reader → ClickHouse -->
+      <div class="flow-section">
+        <div class="flow-arrow" style="--arrow-color: var(--accent-amber)">
+          <div class="arrow-line"><div class="particle" style="background: var(--accent-amber)"></div></div>
+          <div class="flow-label" style="color: var(--accent-amber)">Insert to Analytical Store</div>
           <div class="arrow-line"><div class="particle" style="background: var(--accent-amber); animation-delay: 0.8s"></div></div>
         </div>
       </div>
@@ -816,9 +929,9 @@
             </div>
             <div class="node-name">Apache Superset</div>
             <div class="node-tech" style="color: var(--accent-blue);">Dashboard &amp; Visualization</div>
-            <div class="node-desc">Open-source BI platform providing interactive dashboards with filters, drilldowns, and ~100 analytical widgets across 7 core dashboards.</div>
+            <div class="node-desc">Open-source BI platform providing interactive dashboards with filters, drilldowns, and ~100 analytical widgets across 8 core dashboards.</div>
             <div class="node-details">
-              <div class="detail-item"><span class="bullet" style="background: var(--accent-blue)"></span>7 core dashboards, ~100 widgets</div>
+              <div class="detail-item"><span class="bullet" style="background: var(--accent-blue)"></span>8 core dashboards, ~100 widgets</div>
               <div class="detail-item"><span class="bullet" style="background: var(--accent-blue)"></span>Cross-filtering and drill-down support</div>
               <div class="detail-item"><span class="bullet" style="background: var(--accent-blue)"></span>Guest token auth for embedded access</div>
               <div class="detail-item"><span class="bullet" style="background: var(--accent-blue)"></span>REST API for programmatic integration</div>
@@ -875,6 +988,7 @@
                 <div class="dash-tile"><div class="tile-icon">👥</div><div class="tile-name">Adoption &amp; Engagement</div></div>
                 <div class="dash-tile"><div class="tile-icon">🔍</div><div class="tile-name">Data Hygiene</div></div>
                 <div class="dash-tile"><div class="tile-icon">📋</div><div class="tile-name">Report Library</div></div>
+                <div class="dash-tile"><div class="tile-icon">⚙️</div><div class="tile-name">Benchmark Settings</div></div>
                 <div class="dash-tile" style="border-style: dashed; opacity: 0.5;"><div class="tile-icon">➕</div><div class="tile-name">Future Dashboards</div></div>
               </div>
             </div>
@@ -884,11 +998,40 @@
 
     </div><!-- /arch-canvas -->
 
+    <!-- Pipeline Capabilities -->
+    <div class="grid-2" style="margin-top: 24px; margin-bottom: 24px;">
+      <div class="panel">
+        <div class="panel-title" style="color: var(--accent-orange);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Pipeline Capabilities
+        </div>
+        <ul style="--bullet-color: var(--accent-orange);">
+          <li>Rewritten from Java to <strong style="color: var(--text);">Python or Go</strong></li>
+          <li>Feature flagged — ENV full killswitch (on/off), ENV client-level toggle (on/off)</li>
+          <li>Batching &amp; deduplication for efficient writes</li>
+          <li>Error handling with dead-letter queues</li>
+          <li>Structured logging &amp; Lambda observability</li>
+          <li>Action routing: <strong style="color: var(--text);">all</strong>, <strong style="color: var(--text);">clickhouse</strong>, <strong style="color: var(--text);">opensearch</strong></li>
+          <li>Bulk load per client — kick off with a <strong style="color: var(--text);">Rails rake job</strong>, isolated to ClickHouse</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <div class="panel-title" style="color: var(--accent-teal);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          Nice to Have
+        </div>
+        <ul style="--bullet-color: var(--accent-teal);">
+          <li>Surgimate Admin UI — diff view between ClickHouse &amp; PostgreSQL data</li>
+          <li>Developer dashboard on ClickHouse for pipeline health &amp; metrics</li>
+        </ul>
+      </div>
+    </div>
+
     <!-- Legend -->
     <div class="legend-bar" style="margin-top: 24px;">
       <div class="legend-title">Data Flow Legend</div>
-      <div class="legend-item"><span style="background: var(--accent-orange);"></span> Nightly ETL Extract</div>
-      <div class="legend-item"><span style="background: var(--accent-amber);"></span> Transform &amp; Load</div>
+      <div class="legend-item"><span style="background: var(--accent-orange);"></span> Resource Changed (SNS Fan-Out)</div>
+      <div class="legend-item"><span style="background: var(--accent-amber);"></span> SQS &rarr; Lambda &rarr; PostgreSQL Reader &rarr; Destinations</div>
       <div class="legend-item"><span style="background: var(--accent-blue);"></span> Analytical Queries</div>
       <div class="legend-item"><span style="background: var(--accent-violet);"></span> Embedded iFrame</div>
       <div class="legend-item"><span style="background: var(--accent-rose);"></span> Auth Token (Rails &rarr; Superset &rarr; Angular)</div>
@@ -903,7 +1046,7 @@
        ════════════════════════════════════════════════ -->
   <div class="section">
     <div class="section-label"><span class="dot" style="background: var(--accent-sky)"></span> Dashboard Breakdown</div>
-    <h2>7 Committed Dashboards</h2>
+    <h2>8 Committed Dashboards</h2>
     <p class="section-subtitle">Each dashboard is designed to deliver actionable insights aligned to Surgimate's core strategic pillars. All will be demo-ready for prospects and customers.</p>
 
     <div class="grid-2" style="margin-bottom: 20px;">
@@ -958,7 +1101,7 @@
         </ul>
       </div>
     </div>
-    <div class="grid-3">
+    <div class="grid-2" style="margin-bottom: 20px;">
       <div class="dash-detail">
         <div class="dd-header">
           <div class="dd-num" style="background: rgba(56, 189, 248, 0.15); color: var(--accent-sky);">5</div>
@@ -983,6 +1126,8 @@
           <li>Data completeness scoring</li>
         </ul>
       </div>
+    </div>
+    <div class="grid-2">
       <div class="dash-detail">
         <div class="dd-header">
           <div class="dd-num" style="background: rgba(251, 191, 36, 0.15); color: var(--accent-amber);">7</div>
@@ -993,6 +1138,19 @@
           <li>22 operational reports</li>
           <li>Drill-down and export</li>
           <li>Foundation for ad-hoc reporting</li>
+        </ul>
+      </div>
+      <div class="dash-detail">
+        <div class="dd-header">
+          <div class="dd-num" style="background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald);">8</div>
+          <div class="dd-name">Benchmark Settings</div>
+        </div>
+        <div class="dd-desc">Configure performance targets per Division or Location with precedence rules and override hierarchy.</div>
+        <ul style="--bullet-color: var(--accent-emerald);">
+          <li>Division and location-level benchmark targets</li>
+          <li>System defaults with division &rarr; location precedence</li>
+          <li>Metrics: cancel rate, utilization, block utilization, cycle time, % with DOS, % active</li>
+          <li>Edit and override capabilities per facility</li>
         </ul>
       </div>
     </div>
@@ -1016,12 +1174,14 @@
         <div class="tl-week-label" style="color: var(--accent-emerald);">Weekend 1 — Foundation</div>
         <div class="tl-dates">Saturday, April 18 – Sunday, April 19</div>
         <div class="tl-hours-label">Infrastructure Setup</div>
-        <h4>ETL Setup</h4>
+        <h4>Event Pipeline Setup</h4>
         <ul class="tl-tasks" style="--bullet-color: var(--accent-emerald);">
-          <li>PostgreSQL reader instance</li>
-          <li>Data pipeline creation</li>
-          <li>Manual bulk load (1-year dataset)</li>
-          <li>Nightly job configuration</li>
+          <li>Resource Changed SNS topic configuration</li>
+          <li>3 SQS queues (OpenSearch, ClickHouse, FHIR) with DLQs</li>
+          <li>Lambda scaffolding in Python/Go</li>
+          <li>Feature flag implementation (ENV killswitch + client toggle)</li>
+          <li>PostgreSQL Reader Instance setup</li>
+          <li>ClickHouse writer with batching &amp; deduplication</li>
         </ul>
         <h4 style="margin-top: 14px;">Database</h4>
         <ul class="tl-tasks" style="--bullet-color: var(--accent-emerald);">
@@ -1112,7 +1272,7 @@
   <div class="section">
     <div class="section-label"><span class="dot" style="background: var(--accent-violet)"></span> Execution Model</div>
     <h2>Team &amp; Effort</h2>
-    <p class="section-subtitle">Three core engineers working in parallel across focused weekend sessions. ~70 hours per engineer, paid via spot bonus (June).</p>
+    <p class="section-subtitle">Three core engineers working in parallel across focused weekend sessions. ~70 hours per engineer.</p>
 
     <div class="grid-3">
       <div class="team-card">
@@ -1141,28 +1301,29 @@
        ════════════════════════════════════════════════ -->
   <div class="section">
     <div class="section-label"><span class="dot" style="background: var(--accent-amber)"></span> Data Strategy</div>
-    <h2>Initial Load &amp; Ongoing Pipeline</h2>
+    <h2>Historical Backfill &amp; Real-Time Streaming</h2>
     <div class="grid-2">
       <div class="panel">
         <div class="panel-title" style="color: var(--accent-amber);">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Initial Load
+          Historical Backfill
         </div>
         <ul style="--bullet-color: var(--accent-amber);">
-          <li>One-time ingestion of 1 year of historical data</li>
-          <li>Data pruning for performance optimization</li>
-          <li>Manual bulk load during Weekend 1</li>
+          <li>One-time full ingestion of all historical data</li>
+          <li>Kick off per-client via Rails rake job, isolated to ClickHouse</li>
+          <li>(Nice-to-have) UI in Surgimate Admin to trigger client extractions</li>
         </ul>
       </div>
       <div class="panel">
         <div class="panel-title" style="color: var(--accent-teal);">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-          Ongoing Pipeline
+          Real-Time Streaming
         </div>
         <ul style="--bullet-color: var(--accent-teal);">
-          <li>Nightly incremental updates</li>
+          <li>Rails publishes events to SNS on every create/update</li>
+          <li>SQS buffers with retry and dead-letter queue</li>
+          <li>Lambda transforms and writes to ClickHouse in real time</li>
           <li>Intelligent schema for efficient joins</li>
-          <li>Designed for future real-time expansion</li>
         </ul>
       </div>
     </div>
@@ -1234,7 +1395,7 @@
           <div class="outcome-check" style="background: rgba(45, 212, 191, 0.15); color: var(--accent-teal);">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <div class="outcome-text"><strong>7 production-ready dashboards</strong></div>
+          <div class="outcome-text"><strong>8 production-ready dashboards</strong></div>
         </div>
         <div class="outcome-item">
           <div class="outcome-check" style="background: rgba(45, 212, 191, 0.15); color: var(--accent-teal);">
@@ -1246,7 +1407,7 @@
           <div class="outcome-check" style="background: rgba(45, 212, 191, 0.15); color: var(--accent-teal);">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <div class="outcome-text"><strong>Scalable data infrastructure</strong> <span>(ETL + ClickHouse)</span></div>
+          <div class="outcome-text"><strong>Scalable data infrastructure</strong> <span>(Event Pipeline + ClickHouse)</span></div>
         </div>
         <div class="outcome-item">
           <div class="outcome-check" style="background: rgba(45, 212, 191, 0.15); color: var(--accent-teal);">
@@ -1293,7 +1454,7 @@
       <div class="cost-items">
         <div class="cost-item">
           <div class="cost-val" style="color: var(--accent-orange)">$600</div>
-          <div class="cost-label">Apache Hop</div>
+          <div class="cost-label">AWS SNS / SQS / Lambda</div>
         </div>
         <div class="cost-item">
           <div class="cost-val" style="color: var(--accent-amber)">$750</div>
